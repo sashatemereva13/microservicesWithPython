@@ -1,6 +1,14 @@
 # Tech Stack
 
-On the Python side for the microservices, most services use FastAPI for the API framework. The exception is the logging-service, which runs on **Flask** with SQLAlchemy and Flask-Migrate for database migrations (PostgreSQL from Module 8, SQLite for local development). SQLAlchemy handles the database relationship mapping, Pydantic handles schema validation for FastAPI services, and a native `auth-service` (built with FastAPI, `python-jose`, and `passlib`) handles authentication and JWT token management. RabbitMQ handles all async messaging — both background notifications and activity logging. The databases include PostgreSQL for relational storage (from Module 8) and Redis for caching. SQLite is used for local development in Modules 1–7.
+On the Python side for the microservices, most services use FastAPI for the API framework. The exception is the logging-service, which runs on **Flask** with SQLAlchemy and Flask-Migrate for database migrations (PostgreSQL from Module 8, SQLite for local development). 
+
+SQLAlchemy handles the database relationship mapping, 
+
+Pydantic handles schema validation for FastAPI services, 
+
+and a native `auth-service` (built with FastAPI, `python-jose`, and `passlib`) handles authentication and JWT token management. 
+
+RabbitMQ handles all async messaging — both background notifications and activity logging. The databases include PostgreSQL for relational storage (from Module 8) and Redis for caching. SQLite is used for local development in Modules 1–7.
 
 The notification-service runs on Node.js with SQLite — always local, never containerized. GitHub Actions manages Docker deployments and the CI/CD pipeline.
 
