@@ -114,6 +114,12 @@ cd services/user-service && pytest tests/ -v
 cd services/game-service && pytest tests/ -v
 ```
 
+run inside each service to first active the env
+```bash
+source .venv/bin/activate
+python -m pytest tests/ -v
+```
+
 Check linting before you push — CI enforces both of these:
 ```bash
 cd services/game-service
