@@ -99,5 +99,51 @@ async def proxy(request: Request, path: str):
         curl http://localhost:8000/v1/activities
         curl http://localhost:8000/v1/unknown   # should return 404
     """
-    # TODO: implement steps 1–4 above
-    raise NotImplementedError("implement the proxy forwarding logic")
+    # step 1 - parse the path
+    segments = path.split("/")
+
+    if len(segments) < 2:
+        return Response(
+            status_code=404,
+            content="Not found"
+        )
+    
+    # for ex in /v1/users/123 - find the users
+    resource = segments[1]
+
+    # step 2 - find the target service
+    target_base = ROUTES.get(resource)
+
+    if target_base is None:
+        return Response(
+            status_code=404,
+            content=f"Unknown resource: {resource}"
+        )
+    
+    # step 3 - build the full target URL
+    target_url = f"{target_base}/{path}"
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            downstream_response = await client.request(
+                method=request.method,
+                url=target_url,
+                headers=request.headers.raw,
+                content=await request.body(),
+                params=request.query_params,
+            )
+        
+        return Response(
+            content=downstream_response.content,
+            status_code=downstream_response.status_code,
+            headers=dict(downstream_response.headers),
+            media_type=downstream_response.headers.get("content-type")
+        )
+    
+    # step 4 - service unreachable
+    except httpx.RequestError:
+        return Response(
+            status_code=503,
+            content="Service unavailable"
+        )
+    

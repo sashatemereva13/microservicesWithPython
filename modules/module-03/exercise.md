@@ -37,6 +37,46 @@ ROUTES = {
 
 When a request arrives at `/v1/users/123`, the gateway splits the path, finds `users` in the dictionary, and forwards the full request to `http://localhost:8001/v1/users/123` — method, headers, and body preserved exactly.
 
+**RESULT**
+
+```bash
+
+13xsasha@Sashas-MacBook-Pro microservicesWithPython % curl -i http://localhost:8000/v1/activities/
+HTTP/1.1 503 Service Unavailable
+date: Wed, 20 May 2026 15:19:32 GMT
+server: uvicorn
+content-length: 19
+
+Service unavailable%
+13xsasha@Sashas-MacBook-Pro microservicesWithPython % curl -i http://localhost:8000/v1/games/
+HTTP/1.1 200 OK
+date: Wed, 20 May 2026 15:19:36 GMT
+server: uvicorn
+date: Wed, 20 May 2026 15:19:37 GMT
+server: uvicorn
+content-length: 1181
+content-type: application/json
+```
+
+```json
+{"items":[{"id":"e84a8729-524f-4b27-b4a2-e7fc9221da34","title":"The Legend of Zelda: Breath of the Wild","genre":"Action-adventure","platform":"Nintendo Switch","release_year":2017,"cover_url":"https://example.com/zelda-botw.jpg","created_at":"2026-05-18T17:21:06.821243"},{"id":"eb7dec05-eadc-466c-8e30-5cb56d976fcb","title":"Elden Ring","genre":"Action RPG","platform":"PC","release_year":2022,"cover_url":"https://example.com/elden-ring.jpg","created_at":"2026-05-18T17:21:06.821253"},{"id":"70e7c29a-10cf-4cac-91d2-374be67ae7a4","title":"Minecraft","genre":"Sandbox","platform":"PC","release_year":2011,"cover_url":"https://example.com/minecraft.jpg","created_at":"2026-05-18T17:21:06.821258"},{"id":"af0ba171-bce5-4b27-96eb-e4bddde56674","title":"Hollow Knight","genre":"Metroidvania","platform":"PC","release_year":2017,"cover_url":"https://example.com/hollow-knight.jpg","created_at":"2026-05-18T17:21:06.821261"},{"id":"71553335-bb63-46bd-bbe8-d3b03b3c6490","title":"Stardew Valley","genre":"Simulation RPG","platform":"PC","release_year":2016,"cover_url":"https://example.com/stardew-valley.jpg","created_at":"2026-05-18T17:21:06.821264"}],"total":5,"limit":20,"offset":0}%
+```
+
+```bash
+13xsasha@Sashas-MacBook-Pro microservicesWithPython % curl -i http://localhost:8000/v1/games/
+HTTP/1.1 200 OK
+date: Wed, 20 May 2026 15:20:03 GMT
+server: uvicorn
+date: Wed, 20 May 2026 15:20:02 GMT
+server: uvicorn
+content-length: 1181
+content-type: application/json
+```
+
+```json
+{"items":[{"id":"e84a8729-524f-4b27-b4a2-e7fc9221da34","title":"The Legend of Zelda: Breath of the Wild","genre":"Action-adventure","platform":"Nintendo Switch","release_year":2017,"cover_url":"https://example.com/zelda-botw.jpg","created_at":"2026-05-18T17:21:06.821243"},{"id":"eb7dec05-eadc-466c-8e30-5cb56d976fcb","title":"Elden Ring","genre":"Action RPG","platform":"PC","release_year":2022,"cover_url":"https://example.com/elden-ring.jpg","created_at":"2026-05-18T17:21:06.821253"},{"id":"70e7c29a-10cf-4cac-91d2-374be67ae7a4","title":"Minecraft","genre":"Sandbox","platform":"PC","release_year":2011,"cover_url":"https://example.com/minecraft.jpg","created_at":"2026-05-18T17:21:06.821258"},{"id":"af0ba171-bce5-4b27-96eb-e4bddde56674","title":"Hollow Knight","genre":"Metroidvania","platform":"PC","release_year":2017,"cover_url":"https://example.com/hollow-knight.jpg","created_at":"2026-05-18T17:21:06.821261"},{"id":"71553335-bb63-46bd-bbe8-d3b03b3c6490","title":"Stardew Valley","genre":"Simulation RPG","platform":"PC","release_year":2016,"cover_url":"https://example.com/stardew-valley.jpg","created_at":"2026-05-18T17:21:06.821264"}],"total":5,"limit":20,"offset":0}%
+```
+
 ---
 
 ## Part B — Wire up the activity-service _(~50 min)_
