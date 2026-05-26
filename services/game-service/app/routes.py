@@ -36,3 +36,11 @@ def search_games(q: str, limit: int = 20, offset: int = 0, db: Session = Depends
         return service.find_games(db, q, limit, offset)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
+
+@router.get("/{game_id}", response_model=schemas.GameOut)
+def get_game(game_id: str, db: Session = Depends(get_db)):
+    try:
+        return service.fetch_game(db, game_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
