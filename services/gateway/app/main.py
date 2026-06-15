@@ -1,5 +1,6 @@
 import httpx
 from fastapi import FastAPI, Request, Response
+from jose import JWTError, jwt
 
 from app.config import settings
 
@@ -20,7 +21,8 @@ ROUTES: dict[str, str] = {
     "notifications": settings.notification_service_url,
     "consent": settings.logging_service_url,
     "logs": settings.logging_service_url,
-    
+    "auth": settings.auth_service_url,
+
 }
 
 
@@ -123,6 +125,37 @@ async def proxy(request: Request, path: str):
             status_code=404,
             content=f"Unknown resource: {resource}"
         )
+    
+    # step 2.5 - JWT validation
+    is_public_auth_token = (
+        len(segments) >= 3
+        and segments[0] == "v1"
+        and segments[1] == "auth"
+        and segments[2] == "token"
+    )
+
+    if not is_public_auth_token:
+        authorization = request.headers.get("authorization")
+
+        if not authorization or not authorization.startswith("Bearer "):
+            return Response(
+                status_code=401,
+                content="Missing or invalid Authorization header"
+            )
+        
+        token = authorization.removeprefix("Bearer ").strip()
+
+        try:
+            jwt.decode(
+                token,
+                settings.secret_key,
+                algorithms=[settings.algorithm],
+            )
+        except JWTError:
+            return Response(
+                status_code=401,
+                content="Invalid or expired token"
+            )
     
     # step 3 - build the full target URL
     target_url = f"{target_base}/{path}"
