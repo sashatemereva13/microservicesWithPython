@@ -18,6 +18,9 @@ ROUTES: dict[str, str] = {
     "games":      settings.game_service_url,
     "activities": settings.activity_service_url,
     "notifications": settings.notification_service_url,
+    "consent": settings.logging_service_url,
+    "logs": settings.logging_service_url,
+    
 }
 
 
