@@ -19,6 +19,9 @@ All client requests now go through the gateway. No client ever calls a service d
 Think about what the client would need to know and manage if it talked to each service on its own port.
 
 > *Your answer:*
+several reasons.
+first of all, gateway created a safety guard to protect the services. it keeps the internal structure hidden from the outside
+secondly, with gateway handling the routing, the client only talks to port 8000 - the system is easier to change.
 
 ---
 
@@ -31,6 +34,8 @@ The activity-service makes two outbound calls: one to validate the user (with re
 What is the consequence for the user in each case if the downstream service is unavailable?
 
 > *Your answer:*
+to begin with, an activity should only really be created for an existing user, otherwise is impossible in practice, so it shall be impossible in code.
+when it comes to games, if the whole game-service is off, the activity request still works, returning game:null. that's because an activity could still be valid, even without the game-service on - i imagine, some activities like 'viewed the game', could still work.
 
 ---
 
@@ -43,6 +48,7 @@ Every time a client creates an activity, three services are involved synchronous
 What happens to the user experience if the slowest service in the chain takes 3 seconds to respond?
 
 > *Your answer:*
+so, the activity-service being dependent on user and game services means that it would need to wait for the user and game to be on/return a response. talking about those 3seconds, it would definitely add 3 seconds to the total time, and, maaybe more seconds, depending on what exactly took time.
 
 ---
 
