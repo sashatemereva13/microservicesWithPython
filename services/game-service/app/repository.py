@@ -20,6 +20,8 @@ def create_game(db: Session, data: GameCreate) -> Game:
         title = data.title,
         genre = data.genre,
         platform = data.platform,
+        release_year=data.release_year,
+        cover_url=data.cover_url,
     )
     db.add(game)
     db.commit()
