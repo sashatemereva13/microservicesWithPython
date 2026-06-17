@@ -1,0 +1,78 @@
+export const PRESENTATION_STEPS = [
+  {
+    id: '01',
+    title: 'Open the system',
+    route: '/',
+    routeLabel: 'System Tour',
+    targetId: 'step-01-system',
+    say: 'One public entry point.',
+    do: 'Open System Tour.',
+  },
+  {
+    id: '02',
+    title: 'Sign in',
+    route: '/',
+    routeLabel: 'System Tour',
+    targetId: 'step-02-auth',
+    say: 'JWT checked at the gateway.',
+    do: 'Use demo credentials.',
+  },
+  {
+    id: '03',
+    title: 'Show consent defaults',
+    route: '/your-data',
+    routeLabel: 'Privacy & Security',
+    targetId: 'step-03-consent',
+    say: 'Logging is off by default.',
+    do: 'Open Privacy & Security.',
+  },
+  {
+    id: '04',
+    title: 'Enable consent',
+    route: '/your-data',
+    routeLabel: 'Privacy & Security',
+    targetId: 'step-04-consent',
+    say: 'Consent changes storage.',
+    do: 'Turn logging on.',
+  },
+  {
+    id: '05',
+    title: 'Create one event',
+    route: '/',
+    routeLabel: 'System Tour',
+    targetId: 'step-05-create',
+    say: 'Sync path through the gateway.',
+    do: 'Submit one activity.',
+  },
+  {
+    id: '06',
+    title: 'Show async flow',
+    route: '/',
+    routeLabel: 'System Tour',
+    targetId: 'step-06-async',
+    say: 'RabbitMQ handles side effects.',
+    do: 'Point to notifications.',
+  },
+  {
+    id: '07',
+    title: 'Walk the architecture',
+    route: '/discover',
+    routeLabel: 'Catalogue & Services',
+    targetId: 'step-07-architecture',
+    say: 'Boundaries, layers, CQRS.',
+    do: 'Open the catalogue page.',
+  },
+  {
+    id: '08',
+    title: 'Close the story',
+    route: '/your-data',
+    routeLabel: 'Privacy & Security',
+    targetId: 'step-08-close',
+    say: 'Trust over data capture.',
+    do: 'Show logs, erase, health.',
+  },
+] as const
+
+export type PresentationStepId = (typeof PRESENTATION_STEPS)[number]['id']
+
+export const DEFAULT_PRESENTATION_STEP_ID: PresentationStepId = '01'

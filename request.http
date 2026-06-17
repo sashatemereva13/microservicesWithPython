@@ -1,0 +1,89 @@
+# ==========================================
+# Environment Variables
+# ==========================================
+@gateway = http://localhost:8000
+@auth_service = http://localhost:8005
+
+###
+
+# ==========================================
+# 1. AUTHENTICATION
+# ==========================================
+# @name login
+POST {{auth_service}}/v1/auth/token
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser&password=password
+
+###
+# Extract token into a variable for subsequent requests
+@token = {{login.response.body.access_token}}
+
+###
+
+# ==========================================
+# 2. SEED DATA: CREATE USER
+# ==========================================
+# Route: gateway -> user-service (:8001)
+POST {{gateway}}/v1/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "username": "nova",
+  "email": "nova@example.com",
+  "password": "nova-pass"
+}
+
+###
+
+# ==========================================
+# 3. SEED DATA: CREATE GAME
+# ==========================================
+# Route: gateway -> game-service (:8002)
+POST {{gateway}}/v1/games
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Hollow Knight 2",
+  "genre": "Metroidvania",
+  "platform": "PC"
+}
+
+###
+
+# ==========================================
+# 4. CORE ACTION: LOG ACTIVITY
+# ==========================================
+# Route: gateway -> activity-service (:8003)
+# Note: This will internally trigger HTTP calls to user-service & game-service,
+# and then publish a RabbitMQ message to the notification and logging queues.
+POST {{gateway}}/v1/activities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "user_id": "4fca6c81-979b-442b-b141-2f2fa2329a01",
+  "game_id": "85a446df-ca16-4c01-bae1-1651ca9c4b94",
+  "action": "completed",
+  "duration_minutes": 240
+}
+
+###
+
+# ==========================================
+# 5. VERIFY: GET ACTIVITIES
+# ==========================================
+# Route: gateway -> activity-service (:8003)
+GET {{gateway}}/v1/activities
+Authorization: Bearer {{token}}
+
+###
+
+# ==========================================
+# 6. VERIFY: GET NOTIFICATIONS (RabbitMQ Result)
+# ==========================================
+# Route: gateway -> notification-service (:8004)
+GET {{gateway}}/v1/notifications
+Authorization: Bearer {{token}}
